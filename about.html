@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Section</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --dark: #e2e8f0;
+            --gray: #94a3b8;
+            --light: #050b14;
+            --white: #f8fafc;
+            --surface: #111827;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2563eb;
+            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-link:hover { color: var(--primary-dark); }
+
+        /* ===== LIVE CLOCK (top middle) ===== */
+        .live-clock {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: #eff6ff;
+            padding: 0.5rem 1.1rem;
+            border-radius: 50px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .live-clock .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+            animation: pulseDot 1.6s ease-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+            70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .live-clock #clockTime {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.98rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .live-clock #clockZone {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--gray);
+            border-left: 1px solid #cbd5e1;
+            padding-left: 0.55rem;
+        }
+
+        @media (max-width: 760px) {
+            nav {
+                flex-wrap: wrap;
+                row-gap: 0.5rem;
+            }
+
+            nav > .live-clock {
+                display: flex;
+                position: static;
+                transform: none;
+                order: 3;
+                flex: 0 0 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ===== MAIN ===== */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 7rem 5% 4rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-photo-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            flex-shrink: 0;
+        }
+
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid white;
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.25);
+            background: #e2e8f0;
+        }
+
+        .profile-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            opacity: 0.4;
+        }
+
+        .profile-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .profile-header .role {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .profile-header .location {
+            color: var(--gray);
+            font-size: 0.98rem;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            margin: 2.5rem 0 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 1rem;
+        }
+
+        .card p { color: var(--gray); margin-bottom: 0.8rem; }
+        .card p:last-child { margin-bottom: 0; }
+        .card .highlight { color: var(--primary); font-weight: 600; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            min-width: 0;
+        }
+
+        .info-item .label {
+            color: var(--gray);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-item .value {
+            font-weight: 600;
+            color: var(--dark);
+            overflow-wrap: anywhere;
+        }
+
+        .timeline { position: relative; padding-left: 2rem; }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.8rem;
+            background: var(--surface);
+            padding: 1.3rem 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 1.6rem;
+            width: 14px;
+            height: 14px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+
+        .timeline-item h3 { color: var(--primary); margin-bottom: 0.3rem; }
+        .timeline-item .meta { color: var(--gray); font-size: 0.92rem; }
+
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+        .tag {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .contact-list a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-list a:hover { text-decoration: underline; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header { flex-direction: column; text-align: center; }
+        }
+
+        /* ===== PAGE-LOAD ENTRANCE ANIMATION ===== */
+        .welcome-screen {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 2rem;
+            background: #050b14;
+            color: var(--white);
+            z-index: 3000;
+            animation: welcomeExit 0.9s ease 2.1s forwards;
+        }
+
+        .welcome-screen h1 {
+            width: 100%;
+            max-width: 850px;
+            text-align: center;
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            line-height: 1.1;
+            letter-spacing: 0.02em;
+            animation: welcomeRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .welcome-screen h1 span { color: #60a5fa; }
+
+        .welcome-screen p {
+            margin-top: 1rem;
+            color: #cbd5e1;
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            letter-spacing: 0.08em;
+            animation: welcomeRise 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes welcomeRise {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes welcomeExit {
+            to { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .welcome-screen { animation: welcomeExit 0.2s ease 0.5s forwards; }
+            .welcome-screen h1, .welcome-screen p { animation: none; }
+        }
+
+        nav {
+            opacity: 1;
+            transform: none;
+        }
+        body.loaded nav {
+            animation: navDropIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes navDropIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-header > * {
+            opacity: 1;
+            transform: none;
+        }
+        body.loaded .profile-header > * {
+            animation: heroRiseIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        body.loaded .profile-header > *:nth-child(1) { animation-delay: 0.15s; }
+        body.loaded .profile-header > *:nth-child(2) { animation-delay: 0.30s; }
+        @keyframes heroRiseIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SCROLL REVEAL (works scrolling down AND up) ===== */
+        .reveal {
+            opacity: 1;
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.dir-down { transform: translateY(45px); }
+        .reveal.dir-up { transform: translateY(-45px); }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== THREE-DOT MENU ===== */
+        .dot-menu { position: relative; }
+
+        .dot-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #eff6ff;
+            cursor: pointer;
+            transition: background 0.25s;
+        }
+
+        .dot-menu-btn:hover { background: #dbeafe; }
+
+        .dot-menu-btn span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: block;
+        }
+
+        .dot-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 250px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+            padding: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-12px) scale(0.97);
+            transform-origin: top right;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+            z-index: 1100;
+        }
+
+        .dot-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dot-dropdown-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .dot-dropdown-profile img {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .dot-dropdown-profile .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+
+        .dot-dropdown-profile .role {
+            font-size: 0.78rem;
+            color: var(--gray);
+        }
+
+        .dot-dropdown ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .dot-dropdown ul a {
+            display: block;
+            padding: 0.55rem 0.6rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.92rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dot-dropdown ul a:hover {
+            background: #eff6ff;
+            color: var(--primary);
+        }
+
+        /* ===== DARK THEME SURFACES ===== */
+        nav { background: rgba(15, 23, 42, 0.94); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35); }
+        .card, .info-item, .timeline-item { background: var(--surface); }
+        .dot-dropdown, .live-clock, .dot-menu-btn { background: #1e293b; }
+        .dot-dropdown-profile { border-bottom-color: #334155; }
+
+        /* ===== POLISHED PROFILE LAYER ===== */
+        :root {
+            --ink: #f8fafc;
+            --muted-ink: #a8b6c9;
+            --line: rgba(148, 163, 184, 0.16);
+            --cyan: #22d3ee;
+            --amber: #fbbf24;
+        }
+
+        body {
+            background: radial-gradient(circle at 85% 10%, rgba(34, 211, 238, 0.1), transparent 22%), #050b14;
+            background-image: linear-gradient(rgba(34, 211, 238, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.025) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        nav {
+            padding: 0.8rem 6%;
+            border-bottom: 1px solid var(--line);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo {
+            color: var(--ink);
+            font-size: 1.05rem;
+            letter-spacing: 0.01em;
+        }
+
+        .logo-img {
+            width: 44px;
+            height: 44px;
+            border-width: 2px;
+            border-color: var(--cyan);
+        }
+
+        .back-link { color: var(--cyan); }
+
+        main {
+            max-width: 1120px;
+            padding: 8.5rem 6% 5rem;
+        }
+
+        .profile-header {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 2.5rem;
+            align-items: center;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border: 1px solid var(--line);
+            background: linear-gradient(120deg, rgba(15, 23, 42, 0.96), rgba(14, 116, 144, 0.16));
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-header::after {
+            content: '';
+            position: absolute;
+            width: 18rem;
+            height: 18rem;
+            right: -6rem;
+            top: -8rem;
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            border-radius: 50%;
+        }
+
+        .profile-photo-wrapper { position: relative; z-index: 1; }
+
+        .profile-photo {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 1px var(--cyan), 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-ring { border-color: var(--cyan); }
+
+        .profile-header > div:last-child { position: relative; z-index: 1; }
+
+        .profile-header h1 {
+            color: var(--ink);
+            font-size: clamp(2.3rem, 5vw, 4rem);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .profile-header .role { color: var(--cyan); }
+        .profile-header .location { color: var(--muted-ink); }
+
+        .section-title {
+            color: var(--ink);
+            letter-spacing: -0.02em;
+        }
+
+        .card, .info-item, .timeline-item {
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.16);
+        }
+
+        .card { border-radius: 8px; }
+        .info-item { border-radius: 8px; }
+        .timeline-item { border-radius: 8px; }
+        .card .highlight, .info-item .value { color: var(--cyan); }
+        .timeline-item h3 { color: var(--cyan); }
+        .tag { background: rgba(34, 211, 238, 0.1); color: var(--cyan); }
+
+        @media (max-width: 760px) {
+            nav { flex-wrap: wrap; row-gap: 0.5rem; }
+            nav > .live-clock {
+                display: flex;
+                position: static;
+                transform: none;
+                order: 3;
+                flex: 0 0 100%;
+                justify-content: center;
+            }
+
+            main { padding-top: 10rem; }
+            .profile-header {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                gap: 1.5rem;
+                padding: 2rem 1.25rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROFILE WELCOME INTRO -->
+    <div class="welcome-screen" role="status" aria-label="Welcome to my profile page">
+        <div>
+            <h1>Welcome to <span>My Profile Page</span></h1>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="https://i.postimg.cc/JnSxmJW5/image.jpg" alt="Mehedi Hasan" class="logo-img">Mehedi Hasan
+        </a>
+
+        <!-- LIVE CLOCK -->
+        <div class="live-clock" id="liveClock">
+            <span class="dot"></span>
+            <span id="clockTime">--:--:--</span>
+            <span id="clockZone">IST</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:0.8rem;">
+            <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+            <!-- THREE-DOT MENU -->
+            <div class="dot-menu">
+                <button class="dot-menu-btn" id="dotMenuBtn" aria-label="Open menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="dot-dropdown" id="dotDropdown">
+                    <div class="dot-dropdown-profile">
+                        <img src="https://i.postimg.cc/JnSxmJW5/image.jpg" alt="Mehedi Hasan">
+                        <div>
+                            <div class="name">Mehedi Hasan</div>
+                            <div class="role">Aspiring Software Engineer</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#education">Education</a></li>
+                        <li><a href="index.html#skills">Skills</a></li>
+                        <li><a href="index.html#projects">Projects</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="mailto:mehedihasan92006@gmail.com">Email Me</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="profile-header">
+            <div class="profile-photo-wrapper">
+                <div class="profile-ring"></div>
+                <img src="https://i.postimg.cc/hPStSYP7/n-QVHd.jpg" alt="Mehedi Hasan" class="profile-photo">
+            </div>
+            <div>
+                <h1>Mehedi Hasan</h1>
+                <div class="role">Student | Aspiring Software Engineer</div>
+                <div class="location">Kolkata, West Bengal, India</div>
+            </div>
+        </div>
+
+        <h2 class="section-title reveal">About Me</h2>
+        <div class="card reveal">
+            <p>
+                I am a passionate <span class="highlight">Student</span> currently pursuing
+                <span class="highlight">B.Tech in Electronics and Communication Engineering</span> from
+                <span class="highlight">Aliah University</span>. I love building modern web applications
+                and solving real-world problems through technology.
+            </p>
+            <p>
+                With a strong foundation in <span class="highlight">Python, JavaScript, and C++</span>,
+                I enjoy turning ideas into clean, functional, and user-friendly products. I am always
+                eager to learn new technologies and take on challenging projects.
+            </p>
+            <p>
+                When I'm not coding, you can find me exploring new tools, contributing to open-source,
+                or learning about the latest trends in tech. I'm currently looking for opportunities
+                where I can grow and contribute meaningfully.
+            </p>
+        </div>
+
+        <h2 class="section-title reveal">Quick Info</h2>
+        <div class="info-grid reveal">
+            <div class="info-item">
+                <div class="label">Full Name</div>
+                <div class="value">Mehedi Hasan</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Email</div>
+                <div class="value">mehedihasan92006@gmail.com</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Phone</div>
+                <div class="value">+91 9883886928</div>
+            </div>
+            <div class="info-item">
+                <div class="label">University</div>
+                <div class="value">Aliah University</div>
+            </div>
+        </div>
+
+        <h2 class="section-title reveal">Education</h2>
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <h3>B.Tech – Electronics and Communication Engineering</h3>
+                <div class="meta">Aliah University | 2025 – 2029 | CGPA: 6.5 / 10</div>
+                <p>Currently pursuing my B.Tech degree with focus on electronics, communication systems, and programming.</p>
+            </div>
+            <div class="timeline-item reveal">
+                <h3>Higher Secondary Education</h3>
+                <div class="meta">Kanchantala J.D.J Institution (H.S.) | 2023 – 2025 | Percentage: 67.9%</div>
+                <p>Completed Higher Secondary Education with focus on science and mathematics.</p>
+            </div>
+            <div class="timeline-item reveal">
+                <h3>Secondary Education</h3>
+                <div class="meta">Bandhgora Kali Krishna Vidyalaya (H.S.) | 2021 – 2023 | Percentage: 54%</div>
+                <p>Completed Secondary Education with a focus on science and mathematics.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title reveal">Skills</h2>
+        <div class="card reveal">
+            <div class="skill-tags">
+                <span class="tag">Python</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">Java</span>
+                <span class="tag">C++</span>
+                <span class="tag">C</span>
+                <span class="tag">MATLAB</span>
+                <span class="tag">HTML/CSS</span>
+                <span class="tag">React</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">Express</span>
+                <span class="tag">Git & GitHub</span>
+                <span class="tag">MongoDB</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">Problem Solving</span>
+                <span class="tag">Teamwork</span>
+                <span class="tag">Communication</span>
+                <span class="tag">Leadership</span>
+                <span class="tag">ChatGPT</span>
+                <span class="tag">GitHub Copilot</span>
+                <span class="tag">Perplexity</span>
+                <span class="tag">Google Gemini</span>
+                <span class="tag">Grok</span>
+                <span class="tag">Claude</span>
+                <span class="tag">SQL</span>
+                <span class="tag">matplotlib</span>
+                <span class="tag">pandas</span>
+                <span class="tag">NumPy</span>
+                <span class="tag">scipy</span>
+            </div>
+        </div>
+
+        <h2 class="section-title reveal">Contact</h2>
+        <div class="card reveal">
+            <div class="contact-list">
+                <a href="mailto:mehedihasan92006@gmail.com">📧 mehedihasan92006@gmail.com</a>
+                <a href="tel:+919883886928">📞 +91 9883886928</a>
+                <a href="https://www.linkedin.com/in/mehedihasan2006/" target="_blank" rel="noopener noreferrer">💼 LinkedIn</a>
+                <a href="https://github.com/mehedihasan92006-cloud" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Mehedi Hasan. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // ===== PAGE-LOAD ENTRANCE ANIMATION =====
+        document.body.classList.add('loaded');
+
+        // ===== LIVE CLOCK (top middle, IST) =====
+        function updateLiveClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-IN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Kolkata'
+            });
+            const clockTimeEl = document.getElementById('clockTime');
+            if (clockTimeEl) clockTimeEl.textContent = timeStr;
+        }
+        updateLiveClock();
+        setInterval(updateLiveClock, 1000);
+
+        // ===== SCROLL REVEAL (direction-aware, replays on scroll up too) =====
+        let lastScrollY = window.scrollY;
+        let scrollDir = 'down';
+
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            scrollDir = y > lastScrollY ? 'down' : 'up';
+            lastScrollY = y;
+        }, { passive: true });
+
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        revealEls.forEach(el => {
+            el.classList.add('dir-down');
+            revealObserver.observe(el);
+        });
+
+        // ===== THREE-DOT MENU =====
+        const dotMenuBtn = document.getElementById('dotMenuBtn');
+        const dotDropdown = document.getElementById('dotDropdown');
+
+        dotMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dotDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dotDropdown.contains(e.target) && e.target !== dotMenuBtn) {
+                dotDropdown.classList.remove('open');
+            }
+        });
+
+        dotDropdown.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => dotDropdown.classList.remove('open'));
+        });
+    </script>
+</body>
+</html>
